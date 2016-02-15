@@ -40,6 +40,7 @@ class LCDTest < MiniTest::Unit::TestCase
 	def test_output_single
 		lcd = LCD.new 
 		lcd.values = "0"
+		lcd.update_output
 		zero = %( -- 
 |  |
     
