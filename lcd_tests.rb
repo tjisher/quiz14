@@ -34,7 +34,7 @@ class LCDTest < MiniTest::Unit::TestCase
 		refute_match /#\<LCD:/, lcd.to_s, 
 			"to_s opertaion should be appropiate"
 		assert_equal  "", lcd.to_s,
-			"Should auto convert to string and output empty string as default"
+			"Output empty string as default"
 	end
 
 	def test_output_single

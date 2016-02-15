@@ -9,6 +9,8 @@ scale
 
 stage_2
 time ie 13:20
+last output
+last assignment
 
 stage_3
 alphanumic+time
