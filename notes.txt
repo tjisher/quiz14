@@ -1,3 +1,6 @@
+possibly refactor in http://ngauthier.com/2010/12/everything-that-is-wrong-with-mocking.html style
+passing stringio into class to store the results as if console
+
 from_spec
  --        --   --        -- 
 |  |    |    |    | |  | |   
@@ -9,7 +12,7 @@ from_spec_extended
 |  |    |    |    | |  | |    |       | |  | |  |
            --   --   --   --   --        --   -- 
 |  |    | |       |    |    | |  |    | |  |    |
- --        --   --        --   --        --      
+ --        --   --        --   --        --   -- 
 
  from_spec_scale_2
  --        --   --        -- 
