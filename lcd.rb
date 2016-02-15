@@ -2,6 +2,18 @@
 class LCD
 	attr_accessor :scale
 	attr_reader :values, :output
+	DISPLAY_GRID =[
+		[1, 3, 0 ,3 ,1], #0
+		[0, 2, 0, 2, 0], #1
+		[1, 2 ,1 ,1, 1], #2
+		[1, 2, 1, 2, 1], #3
+		[0, 3, 1, 2, 0], #4
+		[1, 1, 1, 2, 1], #5
+		[1, 1, 1, 3, 1], #6
+		[1, 2, 0, 2 ,0], #7
+		[1, 3, 1 ,3, 1], #8
+		[1, 3, 1, 2, 1], #9
+	]
 
 	def initialize
 		#defaults
@@ -20,6 +32,15 @@ class LCD
 		@values = to_display
 	end
 
+	def display
+		print @output
+	end
+
+	def display to_display
+		self.values = to_display
+		print update_output
+	end
+
 	def update_output
 		@output = ""
 		return @output if @values.empty?
@@ -27,25 +48,13 @@ class LCD
 		# horizontal always has space left and rightmost
 		#[ horizontal, vertical, horizontal, vertical, horizontal]
 		#[none/all, left/right/all, none/all, left/right/all, none/all]
-		display_grid =[
-				[1, 3, 0 ,3 ,1], #0
-				[0, 2, 0, 2, 0], #1
-				[1, 2 ,2 ,1, 1], #2
-				[1, 2, 1, 2, 1], #3
-				[0, 3, 1, 2, 0], #4
-				[1, 1, 1, 2, 1], #5
-				[1, 1, 1, 2, 1], #6
-				[1, 2, 0, 2 ,0], #7
-				[1, 3, 1 ,3, 1], #8
-				[1, 3, 1, 2, 1], #9
-			]
-		#
+
 		display_values = [ "", "", "", "", ""]
 
 		#convert from values to display text via display grid
 		#character by character
 		@values.each_char do |val|
-			grid = display_grid[val.to_i]
+			grid = DISPLAY_GRID[val.to_i]
 			5.times do |line|
 				display_values[line] += " " unless display_values[line].empty? #add spacing
 
@@ -54,7 +63,7 @@ class LCD
 					display_values[line] += [ "    ", " -- "][ grid[line]]
 				else	
 					#vertival
-					display_values[line] = [ "    ", "|   ", "   |", "|  |"][ grid[line]]
+					display_values[line] += [ "    ", "|   ", "   |", "|  |"][ grid[line]]
 				end
 			end
 		end

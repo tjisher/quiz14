@@ -41,14 +41,47 @@ class LCDTest < MiniTest::Unit::TestCase
 		lcd = LCD.new 
 		lcd.values = "0"
 		lcd.update_output
-		zero = %( -- 
+		zero =  <<-STR
+ -- 
 |  |
     
 |  |
- -- )
+ -- 
+STR
 
-		assert_equal  zero, lcd.output,
+		assert_equal  zero.chomp("\n"), lcd.output,
 			"Output of 0 does not match expected"
+	end
+
+	def test_output_two_values
+		lcd = LCD.new 
+		lcd.values = "01"
+		lcd.update_output
+		two_numbers = <<-STR
+ --      
+|  |    |
+         
+|  |    |
+ --      
+STR
+
+		assert_equal  two_numbers.chomp("\n"), lcd.output,
+			"Output of two values '01' does not match expected"
+	end
+
+	def test_output_all_numbers
+		lcd = LCD.new 
+		lcd.values = "0123456789"
+		lcd.update_output
+		all_numbers = <<-STR
+ --        --   --        --   --   --   --   -- 
+|  |    |    |    | |  | |    |       | |  | |  |
+           --   --   --   --   --        --   -- 
+|  |    | |       |    |    | |  |    | |  |    |
+ --        --   --        --   --        --   -- 
+STR
+		assert_equal  all_numbers.chomp("\n"), lcd.output,
+			"Output of 0123456789 does not match expected"
 	end
 
 end
