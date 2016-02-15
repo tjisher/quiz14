@@ -1,3 +1,19 @@
+Extended Spec
+
+Octal should be coped with preditably for consumers ie whether 01234 is actually 01234 or 5349
+
+stage_1
+numeric
+scale
+.to_s
+
+stage_2
+time ie 13:20
+
+stage_3
+alphanumic+time
+
+#------------------------
 LCD Numbers (#14)
 This week's quiz is to write a program that displays LCD style numbers at adjustable sizes.
 
