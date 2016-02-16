@@ -38,12 +38,11 @@ class LCDTest < MiniTest::Unit::TestCase
 	def test_is_valid
 		lcd = LCD.new 
 
-		assert_equal true, LCD::ValidCharacters.include?( "1"), 
+		assert_equal true, LCD::VALID_CHARACTERS.include?( "1"), 
 			"Valid Characters list should exist and include '1'"
 
-		numbers_array = *(0..9)
-		valid_characters_remaining = LCD::ValidCharacters - numbers_array
-		assert valid_characters_remaining >= 0
+		all_numbers = "0123456789"
+		assert (lcd.values = all_numbers).length == all_numbers.length
 			"Valid Characters list should contains all numbers"
 
 		assert_equal false, lcd.is_valid?( "01234a"), 
@@ -52,36 +51,12 @@ class LCDTest < MiniTest::Unit::TestCase
 
 	def test_assignment_integer
 		lcd = LCD.new 
-		lcd.values = 1234
+		lcd.values = 10234
 
-		assert_equal "01234", lcd.values, 
+		assert_equal "10234", lcd.values, 
 			"Integer values should be accepted as strings"
 	end
 
-	def test_assignment_octal
-		lcd = LCD.new 
-
-		assert_equal false, lcd.respect_octal, 
-			"Octal numbers should not be respected as default"
-
-		lcd.values = 01234
-
-		assert_equal "01234", lcd.values, 
-			"Non-respected octal values should output as is"
-	end
-
-	def test_assignment_octal_respect
-		lcd = LCD.new 
-		lcd.respect_octal = true
-
-		assert_equal true, lcd.respect_octal, 
-			"Respect Octal flag should be saved and retrieved properly"
-
-		lcd.values = 01234
-
-		assert_equal "668", lcd.values, 
-			"Respected octal values should be converted and output correctly"
-	end
 
 	#Output
 	def test_responds_to_to_s

@@ -16,6 +16,7 @@ class LCD
 	]
 	HORIZONTAL_CHARACTER = "-"
 	VERTICAL_CHARACTER = "|"
+	VALID_CHARACTERS = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
 
 	def initialize
 		#defaults
@@ -28,10 +29,22 @@ class LCD
 		@output
 	end
 
+	def is_valid? to_check
+		remove_invalid(to_check).length == to_check.length
+	end
+
+	def remove_invalid to_check
+		clean = ""
+		to_check = to_check.to_s
+		to_check.each_char do |char| 
+			 clean += char if VALID_CHARACTERS.include?( char)
+		end
+
+		clean
+	end
+
 	def values= to_display
-		#validate
-		#convert to string
-		@values = to_display
+		@values = remove_invalid( to_display)
 	end
 
 	def display

@@ -1,7 +1,5 @@
 Extended Spec
 
-Octal should be coped with preditably for consumers ie whether 01234 is actually 01234 or 5349
-
 stage_1
 numeric
 scale
