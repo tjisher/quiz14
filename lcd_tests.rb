@@ -166,7 +166,7 @@ STR
 	def test_output_all_numbers
 		lcd = LCD.new 
 		lcd.values = "0123456789"
-		scale = 1
+		lcd.scale = 1
 		lcd.update_output
 		all_numbers = <<-STR
  -       -   -       -   -   -   -   - 

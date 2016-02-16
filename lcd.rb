@@ -14,10 +14,12 @@ class LCD
 		[1, 3, 1 ,3, 1], #8
 		[1, 3, 1, 2, 1], #9
 	]
+	HORIZONTAL_CHARACTER = "-"
+	VERTICAL_CHARACTER = "|"
 
 	def initialize
 		#defaults
-		@scale = 1
+		@scale = 2
 		@values = ""
 		@output = ""
 	end
@@ -44,35 +46,65 @@ class LCD
 	def update_output
 		@output = ""
 		return @output if @values.empty?
-		#assume scale 1
 		# horizontal always has space left and rightmost
-		#[ horizontal, vertical, horizontal, vertical, horizontal]
+		#[ top horizontal, top vertical, mid horizontal, bottom vertical, bottom horizontal]
 		#[none/all, left/right/all, none/all, left/right/all, none/all]
 
-		display_values = [ "", "", "", "", ""]
+		#adapt for scale
+		number_of_lines = (scale * 2)  + 3 # each scale affects 2 verticals, add 3 for horizontals
+		last_line = number_of_lines - 1 #0 based
+		mind_line = scale + 1 #height of one vertical and first horizontal line, 0 based
+
+		display_values = []
+		number_of_lines.times { |line| display_values << "" } #create empty lines
+		horizontal_slices = [ " #{' ' * scale} ", # " \s "
+			" #{HORIZONTAL_CHARACTER * scale} "] # ie " - "
+		vertical_slices = [ " #{' ' *  scale} ", # " \s "
+			"#{VERTICAL_CHARACTER}#{' ' * scale} ", " #{' ' * scale}#{VERTICAL_CHARACTER}",  #ie  "|\s ", " \s|",
+			"#{VERTICAL_CHARACTER}#{' ' * scale}#{VERTICAL_CHARACTER}"] #ie  "|\s|"
+
+		#puts "scale: #{scale}, lines: #{number_of_lines}, values:#{@values}, last_line:#{last_line}, mind_line:#{mind_line}"
+		#puts horizontal_slices.inspect
+		#puts vertical_slices.inspect
 
 		#convert from values to display text via display grid
-		#character by character
-		@values.each_char do |val|
-			grid = DISPLAY_GRID[val.to_i]
-			5.times do |line|
+		#character by character, appending
+		@values.each_char do |char|
+
+			char_on_grid = DISPLAY_GRID[char.to_i]
+			layer = 0 #top horizontal, top vertical, mid horizontal, bottom vertical, bottom horizontal
+
+			number_of_lines.times do |line|
 				display_values[line] += " " unless display_values[line].empty? #add spacing
 
-				if line.even?
-					#horizontal
-					display_values[line] += [ "    ", " -- "][ grid[line]]
+				#puts "line: #{line}, layer:#{layer}, out:#{display_values}"
+
+				#convert display_grid to string
+				if layer.even?
+					#horizontal, strings already scaled
+					display_values[line] += horizontal_slices[ char_on_grid[layer]]
 				else	
-					#vertival
-					display_values[line] += [ "    ", "|   ", "   |", "|  |"][ grid[line]]
+					#vertical, parent loop copes with scaling
+					display_values[line] += vertical_slices[ char_on_grid[layer]]
+				end
+
+				#switch to next layer if needed
+				if line == 0 ||  line == mind_line
+					#just done a horizontal layer next must be vertical
+					layer += 1
+				elsif line == (last_line - 1) ||line == (mind_line - 1)
+					#next layer is horizontal
+					layer += 1
 				end
 			end
 		end
 
 		#work line by line
-		5.times do |line|
+		number_of_lines.times do |line|
 			@output += display_values[line]
-			@output += "\n" unless line == 4 #dont do for last line
+			@output += "\n"
 		end
+		@output.chomp!( "\n") #remove trailing 
 
 		@output
 	end
