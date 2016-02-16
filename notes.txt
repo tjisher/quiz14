@@ -2,17 +2,22 @@ possibly refactor in http://ngauthier.com/2010/12/everything-that-is-wrong-with-
 passing stringio into class to store the results as if console
 
 from_spec
- --        --   --        -- 
-|  |    |    |    | |  | |   
-           --   --   --   -- 
-|  |    | |       |    |    |
- --        --   --        --  
+ -   -   -   - 
+|     | | | | |
+ -       -   - 
+| |   | | |   |
+ -       -   - 
+ -       -   -       - 
+| |   |   |   | | | |  
+         -   -   -   - 
+| |   | |     |   |   |
+ -       -   -       -  
 from_spec_extended
- --        --   --        --   --   --   --   -- 
-|  |    |    |    | |  | |    |       | |  | |  |
-           --   --   --   --   --        --   -- 
-|  |    | |       |    |    | |  |    | |  |    |
- --        --   --        --   --        --   -- 
+ -       -   -       -   -   -   -   - 
+| |   |   |   | | | |   |     | | | | |
+         -   -   -   -   -       -   - 
+| |   | |     |   |   | | |   | | |   |
+ -       -   -       -   -       -   - 
 
  from_spec_scale_2
  --        --   --        -- 
@@ -24,25 +29,17 @@ from_spec_extended
  --        --   --        -- 
 
 for_spec_all
- --
-|  |
-|--|
-|  |
- --
+ - 
+| |
+ - 
+| |
+ - 
 for_spec_scale_2
- --
+ -- 
 |  |
 |  |
-|--|
+ -- 
 |  |
 |  |
- --
-
-better_spec_scale_2?
- ---
-|   |
-|   |
- ---
-|   |
-|   |
- ---
+ -- 
+ 

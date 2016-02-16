@@ -14,17 +14,17 @@ class LCDTest < MiniTest::Unit::TestCase
 
 	def test_assignment_scale
 		lcd = LCD.new 
-		lcd.scale = 2
+		lcd.scale = 1
 
-		assert_equal 2, lcd.scale,
+		assert_equal 1, lcd.scale,
 			"Scale should be saved and retrieved properly"
 	end
 
 	def test_assignment_scale_default
 		lcd = LCD.new 
 
-		assert_equal 1, lcd.scale,
-			"Scale default should be 1"
+		assert_equal 2, lcd.scale,
+			"Scale default should be 2"
 	end
 
 	def test_assignment_string_invalid
@@ -93,6 +93,23 @@ class LCDTest < MiniTest::Unit::TestCase
 			"Output empty string as default"
 	end
 
+	def test_output_single_scaled
+		lcd = LCD.new 
+		lcd.values = "0"
+		lcd.scale = 1
+		lcd.update_output
+		zero =  <<-STR
+ - 
+| |
+   
+| |
+ - 
+STR
+
+		assert_equal  zero.chomp("\n"), lcd.output,
+			"Output of '0' scale 1 does not match expected"
+	end
+
 	def test_output_single
 		lcd = LCD.new 
 		lcd.values = "0"
@@ -100,55 +117,38 @@ class LCDTest < MiniTest::Unit::TestCase
 		zero =  <<-STR
  -- 
 |  |
+|  |
     
+|  |
 |  |
  -- 
 STR
 
 		assert_equal  zero.chomp("\n"), lcd.output,
-			"Output of 0 does not match expected"
+			"Output of '0' scaled to 2 does not match expected"
 	end
 
-	def test_output_single_scaled
+	def test_output_two_values_scaled
 		lcd = LCD.new 
-		lcd.values = "0"
-		lcd.scale = "2"
+		lcd.values = "01"
+		lcd.scale = 1
 		lcd.update_output
-		zero =  <<-STR
- -- 
-|  |
-|  |
-    
-|  |
-|  |
- -- 
+		two_numbers = <<-STR
+ -     
+| |   |
+       
+| |   |
+ -     
 STR
 
-		assert_equal  zero.chomp("\n"), lcd.output,
-			"Output of 0 scaled to 2 does not match expected"
+		assert_equal  two_numbers.chomp("\n"), lcd.output,
+			"Output of two values '01' scale 1 does not match expected"
 	end
 
 	def test_output_two_values
 		lcd = LCD.new 
 		lcd.values = "01"
 		lcd.update_output
-		two_numbers = <<-STR
- --      
-|  |    |
-         
-|  |    |
- --      
-STR
-
-		assert_equal  two_numbers.chomp("\n"), lcd.output,
-			"Output of two values '01' does not match expected"
-	end
-
-	def test_output_two_values_scaled
-		lcd = LCD.new 
-		lcd.values = "01"
-		lcd.scale = "2"
-		lcd.update_output
 		zero =  <<-STR
  --      
 |  |    |
@@ -160,28 +160,44 @@ STR
 STR
 
 		assert_equal  zero.chomp("\n"), lcd.output,
-			"Output of two values '01' scaled to 2 does not match expected"
+			"Output of two values '01' does not match expected"
 	end
 
 	def test_output_all_numbers
 		lcd = LCD.new 
 		lcd.values = "0123456789"
+		scale = 1
 		lcd.update_output
 		all_numbers = <<-STR
- --        --   --        --   --   --   --   -- 
-|  |    |    |    | |  | |    |       | |  | |  |
-           --   --   --   --   --        --   -- 
-|  |    | |       |    |    | |  |    | |  |    |
- --        --   --        --   --        --   -- 
+ -       -   -       -   -   -   -   - 
+| |   |   |   | | | |   |     | | | | |
+         -   -   -   -   -       -   - 
+| |   | |     |   |   | | |   | | |   |
+ -       -   -       -   -       -   - 
 STR
 		assert_equal  all_numbers.chomp("\n"), lcd.output,
-			"Output of 0123456789 does not match expected"
+			"Output of 0123456789 scale 1 does not match expected"
 	end
 
-	def test_output_all_numbers_scaled
+	def test_output_against_spec_example_scaled
 		lcd = LCD.new 
-		lcd.values = "0123456789"
-		lcd.scale = "2"
+		lcd.values = "6789"
+		lcd.scale = 1
+		lcd.update_output
+		all_numbers = <<-STR
+ -   -   -   - 
+|     | | | | |
+ -       -   - 
+| |   | | |   |
+ -       -   - 
+STR
+		assert_equal  all_numbers.chomp("\n"), lcd.output,
+			"Output of 6789 scale 1 does not match expected"
+	end
+
+	def test_output_against_spec_example
+		lcd = LCD.new 
+		lcd.values = "012345"
 		lcd.update_output
 		all_numbers = <<-STR
  --        --   --        -- 
@@ -193,7 +209,7 @@ STR
  --        --   --        -- 
 STR
 		assert_equal  all_numbers.chomp("\n"), lcd.output,
-			"Output of 0123456789 scale 2 does not match expected"
+			"Output of 012345 does not match expected"
 	end
 
 end
