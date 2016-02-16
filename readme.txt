@@ -1,19 +1,6 @@
-Extended Spec
+http://rubyquiz.com/quiz14.html
 
-stage_1
-numeric
-scale
-.to_s
-
-stage_2
-console access
-time ie 13:20
-last output
-last assignment
-
-stage_3
-alphanumic+time
-
+Extened and adpated
 #------------------------
 LCD Numbers (#14)
 This week's quiz is to write a program that displays LCD style numbers at adjustable sizes.
@@ -47,4 +34,19 @@ Your program should print:
  -       -   - 
 
 Note the single column of space between digits in both examples. For other values of -s, simply lengthen the - and | bars.
+#------------------------
+Extended Spec
 
+stage_1
+numeric
+scale
+.to_s
+
+stage_2
+console access
+time ie 13:20
+last output
+last assignment
+
+stage_3
+alphanumic+time
