@@ -2,28 +2,31 @@ require 'Time'
 
 class LCD
 	attr_accessor :scale
-	attr_reader :values, :output
-	DISPLAY_GRID =[
-		[1, 3, 0 ,3 ,1], #0
-		[0, 2, 0, 2, 0], #1
-		[1, 2 ,1 ,1, 1], #2
-		[1, 2, 1, 2, 1], #3
-		[0, 3, 1, 2, 0], #4
-		[1, 1, 1, 2, 1], #5
-		[1, 1, 1, 3, 1], #6
-		[1, 2, 0, 2 ,0], #7
-		[1, 3, 1 ,3, 1], #8
-		[1, 3, 1, 2, 1], #9
-	]
+	attr_reader :values, :output, :lodger
+	DISPLAY_GRID = {
+		"0" => [1, 3, 0 ,3 ,1],
+		"1" => [0, 2, 0, 2, 0],
+		"2" => [1, 2 ,1 ,1, 1], 
+		"3" => [1, 2, 1, 2, 1], 
+		"4" => [0, 3, 1, 2, 0], 
+		"5" => [1, 1, 1, 2, 1],
+		"6" => [1, 1, 1, 3, 1], 
+		"7" => [1, 2, 0, 2 ,0],
+		"8" => [1, 3, 1 ,3, 1], 
+		"9" => [1, 3, 1, 2, 1],
+		":" => [0, 0, 0, 0, 0],
+	}
 	HORIZONTAL_CHARACTER = "-"
 	VERTICAL_CHARACTER = "|"
-	VALID_CHARACTERS = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+	SPECIAL_CHARACTER = "."
+	VALID_CHARACTERS = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ":"]
 
 	def initialize
 		#defaults
 		@scale = 2
 		@values = ""
 		@output = ""
+		@lodger = []
 	end
 
 	def to_s
@@ -36,6 +39,9 @@ class LCD
 
 	def remove_invalid to_check
 		clean = ""
+
+		return to_check.strftime( "%H:%M") if to_check.is_a?(Time) #Time is already valid
+
 		to_check = to_check.to_s
 		to_check.each_char do |char| 
 			 clean += char if VALID_CHARACTERS.include?( char)
@@ -48,13 +54,13 @@ class LCD
 		@values = remove_invalid( to_display)
 	end
 
-	def display
-		print @output
-	end
-
-	def display to_display
-		self.values = to_display
-		print update_output
+	def display to_display=:use_old_value
+		if to_display == :use_old_value
+			print @output
+		else
+			self.values = to_display 
+			print update_output
+		end
 	end
 
 	def update_output
@@ -65,36 +71,39 @@ class LCD
 		#[none/all, left/right/all, none/all, left/right/all, none/all]
 
 		#adapt for scale
-		number_of_lines = (scale * 2)  + 3 # each scale affects 2 verticals, add 3 for horizontals
+		number_of_lines = (@scale * 2)  + 3 # each scale affects 2 verticals, add 3 for horizontals
 		last_line = number_of_lines - 1 #0 based
-		mind_line = scale + 1 #height of one vertical and first horizontal line, 0 based
+		mind_line = @scale + 1 #height of one vertical and first horizontal line, 0 based
 
 		display_values = []
 		number_of_lines.times { |line| display_values << "" } #create empty lines
-		horizontal_slices = [ " #{' ' * scale} ", # " \s "
-			" #{HORIZONTAL_CHARACTER * scale} "] # ie " - "
-		vertical_slices = [ " #{' ' *  scale} ", # " \s "
-			"#{VERTICAL_CHARACTER}#{' ' * scale} ", " #{' ' * scale}#{VERTICAL_CHARACTER}",  #ie  "|\s ", " \s|",
-			"#{VERTICAL_CHARACTER}#{' ' * scale}#{VERTICAL_CHARACTER}"] #ie  "|\s|"
-
-		#puts "scale: #{scale}, lines: #{number_of_lines}, values:#{@values}, last_line:#{last_line}, mind_line:#{mind_line}"
-		#puts horizontal_slices.inspect
-		#puts vertical_slices.inspect
+		horizontal_slices = [ " #{' ' * @scale} ", # " \s "
+			" #{HORIZONTAL_CHARACTER * @scale} "] # ie " - "
+		vertical_slices = [ " #{' ' *  @scale} ", # " \s "
+			"#{VERTICAL_CHARACTER}#{' ' * @scale} ", " #{' ' * @scale}#{VERTICAL_CHARACTER}",  #ie  "|\s ", " \s|",
+			"#{VERTICAL_CHARACTER}#{' ' * @scale}#{VERTICAL_CHARACTER}"] #ie  "|\s|"
+		special_slices = [ " ", "#{SPECIAL_CHARACTER}"] #ie "\s", "."
 
 		#convert from values to display text via display grid
 		#character by character, appending
 		@values.each_char do |char|
 
-			char_on_grid = DISPLAY_GRID[char.to_i]
+			char_on_grid = DISPLAY_GRID[char]
 			layer = 0 #top horizontal, top vertical, mid horizontal, bottom vertical, bottom horizontal
 
 			number_of_lines.times do |line|
 				display_values[line] += " " unless display_values[line].empty? #add spacing
 
-				#puts "line: #{line}, layer:#{layer}, out:#{display_values}"
-
 				#convert display_grid to string
-				if layer.even?
+				if char == ":"
+					#special charaters, dont respect convention
+					if line == (mind_line - 1) || line == (mind_line + 1)
+						#only output on either side of mid line
+						display_values[line] +=  special_slices[1]
+					else
+						display_values[line] +=  special_slices[0]
+					end
+				elsif layer.even?
 					#horizontal, strings already scaled
 					display_values[line] += horizontal_slices[ char_on_grid[layer]]
 				else	
@@ -110,6 +119,7 @@ class LCD
 					#next layer is horizontal
 					layer += 1
 				end
+
 			end
 		end
 
@@ -120,6 +130,7 @@ class LCD
 		end
 		@output.chomp!( "\n") #remove trailing 
 
+		@lodger << { values: @values, scale: @scale, finished_at: Time.now, output: @output }
 		@output
 	end
 

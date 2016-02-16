@@ -273,14 +273,17 @@ STR
 STR
 		zero_one.chomp!("\n")
 
-		assert_equal "01", lcd.lodger.last[:values]
+		assert_equal "01", lcd.lodger.last[:values],
 			"Lodger should record the values given for a job"
 
-		assert lcd.lodger.last[:created_at].is_a?(Time)
-			"Lodger should record time job created"
+		assert lcd.lodger.last[:finished_at].is_a?(Time),
+			"Lodger should record time job finished"
 
-		assert_equal zero_one, lcd.lodger.last[:output]
+		assert_equal zero_one, lcd.lodger.last[:output],
 			"Lodger should record the output given for a job"
+
+		assert_equal 2, lcd.lodger.last[:scale],
+			"Lodger should record the scale given for a job"
 	end
 
 end
