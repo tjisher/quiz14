@@ -42,4 +42,10 @@ for_spec_scale_2
 |  |
 |  |
  -- 
- 
+
+for_time (impossible as it may be)
+ -   -     -   - 
+|     | . | | | |
+ -         -   - 
+| |   | . | |   |
+ -         -   - 

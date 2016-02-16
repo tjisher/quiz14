@@ -1,3 +1,4 @@
+require 'Time'
 
 class LCD
 	attr_accessor :scale
