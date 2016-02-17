@@ -4,8 +4,14 @@
 
 require 'Time'
 
+## LCD Class
+# converts characters to simplified 5 layer grid
+# encoding details:
+# => [top horizontal, top vertical, mid horizontal, bottom vertical, bottom horizontal]
+# => [none/all, left/right/all, none/all, left/right/all, none/all] 
+# => note: horizontal always has space left and rightmost ie " -- "
 class LCD
-	attr_accessor :scale, :display_grid
+	attr_accessor :scale, :display_grid, :horizontal_character, :vertical_character
 	attr_reader :values, :output, :lodger
 	DISPLAY_GRID_DEFAULT = {
 		"0" => [1, 3, 0 ,3 ,1],
@@ -20,19 +26,20 @@ class LCD
 		"9" => [1, 3, 1, 2, 1],
 		":" => [0, 0, 0, 0, 0],
 	}
-	HORIZONTAL_CHARACTER = "-"
-	VERTICAL_CHARACTER = "|"
+	HORIZONTAL_CHARACTER_DEFAULT = "-"
+	VERTICAL_CHARACTER_DEFAULT = "|"
 	SPECIAL_CHARACTER = "."
-	VALID_CHARACTERS_DEFAULT = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ":"]
 	SCALE_DEFAULT = 2
 
 	def initialize
 		#defaults
-		@scale = SCALE_DEFAULT
-		@values = ""
-		@output = ""
 		@lodger = []
+		@scale = SCALE_DEFAULT
 		@display_grid = DISPLAY_GRID_DEFAULT
+		@vertical_character = VERTICAL_CHARACTER_DEFAULT
+		@horizontal_character = HORIZONTAL_CHARACTER_DEFAULT
+		@output = ""
+		@values = ""
 	end
 
 	def to_s
@@ -75,9 +82,6 @@ class LCD
 	def update_output
 		@output = ""
 		return @output if @values.empty?
-		# horizontal always has space left and rightmost
-		#[ top horizontal, top vertical, mid horizontal, bottom vertical, bottom horizontal]
-		#[none/all, left/right/all, none/all, left/right/all, none/all]
 
 		#adapt for scale
 		number_of_lines = (@scale * 2)  + 3 # each scale affects 2 verticals, add 3 for horizontals
@@ -86,11 +90,12 @@ class LCD
 
 		display_values = []
 		number_of_lines.times { |line| display_values << "" } #create empty lines
+
 		horizontal_slices = [ " #{' ' * @scale} ", # " \s "
-			" #{HORIZONTAL_CHARACTER * @scale} "] # ie " - "
+			" #{@horizontal_character * @scale} "] # ie " - "
 		vertical_slices = [ " #{' ' *  @scale} ", # " \s "
-			"#{VERTICAL_CHARACTER}#{' ' * @scale} ", " #{' ' * @scale}#{VERTICAL_CHARACTER}",  #ie  "|\s ", " \s|",
-			"#{VERTICAL_CHARACTER}#{' ' * @scale}#{VERTICAL_CHARACTER}"] #ie  "|\s|"
+			"#{@vertical_character}#{' ' * @scale} ", " #{' ' * @scale}#{@vertical_character}",  #ie  "|\s ", " \s|",
+			"#{@vertical_character}#{' ' * @scale}#{@vertical_character}"] #ie  "|\s|"
 		special_slices = [ " ", "#{SPECIAL_CHARACTER}"] #ie "\s", "."
 
 		#convert from values to display text via display grid
@@ -132,11 +137,9 @@ class LCD
 			end
 		end
 
-		#work line by line
-		number_of_lines.times do |line|
-			@output += display_values[line]
-			@output += "\n"
-		end
+		#convert into single string
+		@output = display_values.join( "\n")
+		@output += "\n" unless @output.empty? #add trailing new line
 
 		@lodger << { values: @values, scale: @scale, finished_at: Time.now, output: @output }
 		@output

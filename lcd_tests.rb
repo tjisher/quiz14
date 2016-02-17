@@ -313,7 +313,7 @@ STR
 		assert_equal "@", lcd.vertical_character,
 			"Verticle Character should changable"
 
-		assert_equal "#", lcd.horizontal_character,
+		assert_equal "=", lcd.horizontal_character,
 			"Horizontal Character should changable"
 	end
 
