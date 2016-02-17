@@ -25,6 +25,9 @@ class LCDTest < MiniTest::Unit::TestCase
 
 		assert_equal 2, lcd.scale,
 			"Scale default should be 2"
+
+		assert_equal 2, LCD::SCALE_DEFAULT,
+			"Scale default should be 2 and be present in SCALE_DEFAULT constant"
 	end
 
 	def test_assignment_string_invalid
@@ -81,7 +84,7 @@ class LCDTest < MiniTest::Unit::TestCase
  - 
 STR
 
-		assert_equal  zero.chomp("\n"), lcd.output,
+		assert_equal  zero, lcd.output,
 			"Output of '0' scale 1 does not match expected"
 	end
 
@@ -99,7 +102,7 @@ STR
  -- 
 STR
 
-		assert_equal  zero.chomp("\n"), lcd.output,
+		assert_equal  zero, lcd.output,
 			"Output of '0' scaled to 2 does not match expected"
 	end
 
@@ -116,7 +119,7 @@ STR
  -     
 STR
 
-		assert_equal  two_numbers.chomp("\n"), lcd.output,
+		assert_equal  two_numbers, lcd.output,
 			"Output of two values '01' scale 1 does not match expected"
 	end
 
@@ -134,7 +137,7 @@ STR
  --      
 STR
 
-		assert_equal  zero_one.chomp("\n"), lcd.output,
+		assert_equal  zero_one, lcd.output,
 			"Output of two values '01' does not match expected"
 	end
 
@@ -150,7 +153,7 @@ STR
 | |   | |     |   |   | | |   | | |   |
  -       -   -       -   -       -   - 
 STR
-		assert_equal  all_numbers.chomp("\n"), lcd.output,
+		assert_equal  all_numbers, lcd.output,
 			"Output of 0123456789 scale 1 does not match expected"
 	end
 
@@ -166,7 +169,7 @@ STR
 | |   | | |   |
  -       -   - 
 STR
-		assert_equal  all_numbers.chomp("\n"), lcd.output,
+		assert_equal  all_numbers, lcd.output,
 			"Output of 6789 scale 1 does not match expected"
 	end
 
@@ -183,7 +186,7 @@ STR
 |  |    | |       |    |    |
  --        --   --        -- 
 STR
-		assert_equal  all_numbers.chomp("\n"), lcd.output,
+		assert_equal  all_numbers, lcd.output,
 			"Output of 012345 does not match expected"
 	end
 
@@ -242,7 +245,7 @@ STR
 | |   | . | |   |
  -         -   - 
 STR
-		assert_equal  all_numbers.chomp("\n"), lcd.output,
+		assert_equal  all_numbers, lcd.output,
 			"Output of 67:89 scale 1 does not match expected"
 	end
 
@@ -271,7 +274,6 @@ STR
 |  |    |
  --      
 STR
-		zero_one.chomp!("\n")
 
 		assert_equal "01", lcd.lodger.last[:values],
 			"Lodger should record the values given for a job"
