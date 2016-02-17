@@ -1,9 +1,16 @@
+##ToC
+# Basic Assignments
+# Output
+# Time object as input
+# Logger
+# Character and encoding changes
+
 require './lcd.rb'
 require 'minitest/autorun'
 
 class LCDTest < MiniTest::Unit::TestCase
 
-	#Assignment 
+	#Basic Assignments 
 	def test_assignment_string
 		lcd = LCD.new 
 		lcd.values = "01234"
@@ -191,7 +198,7 @@ STR
 	end
 
 
-	#Time Testing
+	#Time object as input
 	def test_assignment_time
 		lcd = LCD.new 
 		lcd.values = "12:34"
@@ -249,19 +256,19 @@ STR
 			"Output of 67:89 scale 1 does not match expected"
 	end
 
-	#Lodger
-	def test_lodger_active
+	#Logger
+	def test_logger_active
 		lcd = LCD.new 
 		lcd.values = "01"
 		lcd.update_output
 		lcd.values = "02"
 		lcd.update_output
 
-		assert_equal 2, lcd.lodger.count,
-			"Lodger should record values"
+		assert_equal 2, lcd.logger.count,
+			"Logger should record values"
 	end
 
-	def test_lodger_data
+	def test_logger_data
 		lcd = LCD.new 
 		lcd.values = "01"
 		lcd.update_output
@@ -275,20 +282,20 @@ STR
  --      
 STR
 
-		assert_equal "01", lcd.lodger.last[:values],
-			"Lodger should record the values given for a job"
+		assert_equal "01", lcd.logger.last[:values],
+			"Logger should record the values given for a job"
 
-		assert lcd.lodger.last[:finished_at].is_a?(Time),
-			"Lodger should record time job finished"
+		assert lcd.logger.last[:finished_at].is_a?(Time),
+			"Logger should record time job finished"
 
-		assert_equal zero_one, lcd.lodger.last[:output],
-			"Lodger should record the output given for a job"
+		assert_equal zero_one, lcd.logger.last[:output],
+			"Logger should record the output given for a job"
 
-		assert_equal 2, lcd.lodger.last[:scale],
-			"Lodger should record the scale given for a job"
+		assert_equal 2, lcd.logger.last[:scale],
+			"Logger should record the scale given for a job"
 	end
 
-	#Adapatable Character Set
+	#Character and encoding changes
 	def test_displayed_characters
 		lcd = LCD.new
 
@@ -340,29 +347,29 @@ STR
 	def test_characters_accessible
 		lcd = LCD.new
 
-		assert lcd.display_grid.count > 0,
+		assert lcd.character_encoding.count > 0,
 			"Character Encoding should be accessible and pre-populated"
 	end
 
 
 	def test_characters_overrideable
 		lcd = LCD.new
-		lcd.display_grid = nil
+		lcd.character_encoding = nil
 
-		assert lcd.display_grid.nil?,
+		assert lcd.character_encoding.nil?,
 			"Character Encoding should be overrideable"
 
 		one_encoded = { "1" => [0, 2, 0, 2, 0]}
-		lcd.display_grid = one_encoded
+		lcd.character_encoding = one_encoded
 
-		assert_equal one_encoded, lcd.display_grid,
+		assert_equal one_encoded, lcd.character_encoding,
 			"Character Encoding should accept properly formed hashes"
 	end
 
 	def test_characters_updated_output
 		lcd = LCD.new
 		one_encoded = { "1" => [0, 2, 0, 2, 0]}
-		lcd.display_grid = one_encoded
+		lcd.character_encoding = one_encoded
 
 		lcd.values = "1"
 		lcd.update_output
@@ -375,7 +382,7 @@ STR
    |
     
 STR
-		assert_equal one_encoded, lcd.display_grid,
+		assert_equal one_encoded, lcd.character_encoding,
 			"Character Encoding should accept properly formed hashes"
 		assert_equal one, lcd.output,
 			"Changed Character Encoding should still output correctly"
