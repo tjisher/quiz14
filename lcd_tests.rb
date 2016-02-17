@@ -41,7 +41,7 @@ class LCDTest < MiniTest::Unit::TestCase
 	def test_is_valid
 		lcd = LCD.new 
 
-		assert_equal true, LCD::VALID_CHARACTERS.include?( "1"), 
+		assert_equal true, lcd.valid_characters.include?( "1"), 
 			"Valid Characters list should exist and include '1'"
 
 		all_numbers = "0123456789"
@@ -286,6 +286,105 @@ STR
 
 		assert_equal 2, lcd.lodger.last[:scale],
 			"Lodger should record the scale given for a job"
+	end
+
+	#Adapatable Character Set
+	def test_displayed_characters
+		lcd = LCD.new
+
+		assert !lcd.vertical_character.empty?,
+			"Verticle Character should be accesible and present"
+
+		assert !lcd.horizontal_character.empty?,
+			"Horizontal Character should be accesible and present"
+
+		assert_equal "|", lcd.vertical_character,
+			"Verticle Character should default to '|'"
+
+		assert_equal "-", lcd.horizontal_character,
+			"Horizontal Character should default to '-'"
+	end
+
+	def test_displayed_characters_change
+		lcd = LCD.new
+		lcd.vertical_character = '@'
+		lcd.horizontal_character = '='
+
+		assert_equal "@", lcd.vertical_character,
+			"Verticle Character should changable"
+
+		assert_equal "#", lcd.horizontal_character,
+			"Horizontal Character should changable"
+	end
+
+	def test_displayed_characters_output
+		lcd = LCD.new
+		lcd.vertical_character = '@'
+		lcd.horizontal_character = '='
+		lcd.values = "01"
+		lcd.update_output
+		zero_one =  <<-STR
+ ==      
+@  @    @
+@  @    @
+         
+@  @    @
+@  @    @
+ ==      
+STR
+
+		assert_equal zero_one, lcd.output,
+			"Newly set Horizontal/Verticle Character should output"
+	end
+
+	def test_characters_accessible
+		lcd = LCD.new
+
+		assert lcd.display_grid.count > 0,
+			"Character Encoding should be accessible and pre-populated"
+	end
+
+
+	def test_characters_overrideable
+		lcd = LCD.new
+		lcd.display_grid = nil
+
+		assert lcd.display_grid.nil?,
+			"Character Encoding should be overrideable"
+
+		one_encoded = { "1" => [0, 2, 0, 2, 0]}
+		lcd.display_grid = one_encoded
+
+		assert_equal one_encoded, lcd.display_grid,
+			"Character Encoding should accept properly formed hashes"
+	end
+
+	def test_characters_updated_output
+		lcd = LCD.new
+		one_encoded = { "1" => [0, 2, 0, 2, 0]}
+		lcd.display_grid = one_encoded
+
+		lcd.values = "1"
+		lcd.update_output
+		one =  <<-STR
+    
+   |
+   |
+    
+   |
+   |
+    
+STR
+		assert_equal one_encoded, lcd.display_grid,
+			"Character Encoding should accept properly formed hashes"
+		assert_equal one, lcd.output,
+			"Changed Character Encoding should still output correctly"
+
+		lcd.values = "01"
+		lcd.update_output
+
+		assert_equal one, lcd.output,
+			"Changed Character Encoding should cope with missing characters"
 	end
 
 end

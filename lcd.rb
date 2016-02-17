@@ -5,9 +5,9 @@
 require 'Time'
 
 class LCD
-	attr_accessor :scale
+	attr_accessor :scale, :display_grid
 	attr_reader :values, :output, :lodger
-	DISPLAY_GRID = {
+	DISPLAY_GRID_DEFAULT = {
 		"0" => [1, 3, 0 ,3 ,1],
 		"1" => [0, 2, 0, 2, 0],
 		"2" => [1, 2 ,1 ,1, 1], 
@@ -23,7 +23,7 @@ class LCD
 	HORIZONTAL_CHARACTER = "-"
 	VERTICAL_CHARACTER = "|"
 	SPECIAL_CHARACTER = "."
-	VALID_CHARACTERS = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ":"]
+	VALID_CHARACTERS_DEFAULT = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ":"]
 	SCALE_DEFAULT = 2
 
 	def initialize
@@ -32,10 +32,15 @@ class LCD
 		@values = ""
 		@output = ""
 		@lodger = []
+		@display_grid = DISPLAY_GRID_DEFAULT
 	end
 
 	def to_s
 		@output
+	end
+
+	def valid_characters
+		@display_grid.keys
 	end
 
 	def is_valid? to_check
@@ -44,12 +49,11 @@ class LCD
 
 	def remove_invalid to_check
 		clean = ""
-
 		return to_check.strftime( "%H:%M") if to_check.is_a?(Time) #Time is already valid
 
 		to_check = to_check.to_s
 		to_check.each_char do |char| 
-			 clean += char if VALID_CHARACTERS.include?( char)
+			 clean += char if valid_characters.include?( char)
 		end
 
 		clean
@@ -93,7 +97,7 @@ class LCD
 		#character by character, appending
 		@values.each_char do |char|
 
-			char_on_grid = DISPLAY_GRID[char]
+			char_on_grid = @display_grid[char]
 			layer = 0 #top horizontal, top vertical, mid horizontal, bottom vertical, bottom horizontal
 
 			number_of_lines.times do |line|

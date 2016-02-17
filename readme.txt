@@ -49,4 +49,6 @@ last output
 last assignment
 
 stage_3
+adaptable character set
+adaptable displayed characters
 alphanumic+time
