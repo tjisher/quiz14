@@ -12,16 +12,16 @@ require 'Time'
 # works with any object convertable to string
 #
 # default to_s overides:
-# => time object specificly ouputs in HH:MM format
+# time object specificly ouputs in HH:MM format
 #
 # key methods:
-# => display, takes key values are ouputs result to console
-# => update_output, actual string generation
+# display, takes key values are ouputs result to console
+# update_output, actual string generation
 #
 # encoding details:
-# => [top horizontal, top vertical, mid horizontal, bottom vertical, bottom horizontal]
-# => [none/all, left/right/all, none/all, left/right/all, none/all] 
-# => note: horizontal always has space left and rightmost ie " -- "
+# top horizontal, top vertical, mid horizontal, bottom vertical, bottom horizontal
+# none/all, left/right/all, none/all, left/right/all, none/all
+# note: horizontal always has space left and rightmost ie " -- "
 class LCD
 	attr_accessor :scale, :character_encoding, :horizontal_character, :vertical_character
 	attr_reader :values, :output, :logger
@@ -54,6 +54,7 @@ class LCD
 		@values = ""
 	end
 
+	#returns the last output
 	def to_s
 		@output
 	end
@@ -91,8 +92,8 @@ class LCD
 	#always re-generates output
 	#
 	#optional parametes
-	# => to_display, new value to be displayed
-	# => scale, new scale to be used
+	# to_display, new value to be displayed
+	# scale, new scale to be used
 	def display to_display=nil, scale=nil
 		self.scale = scale if scale
 		self.values = to_display if to_display
@@ -108,16 +109,16 @@ class LCD
 		return @output if @values.empty?
 
 		#adapt for scale
-		# => key line numbers
+		# key line numbers
 		number_of_lines = (@scale * 2)  + 3 # each scale affects 2 verticals, add 3 for horizontals
 		last_line = number_of_lines - 1 #0 based
 		mind_line = @scale + 1 #height of one vertical and first horizontal line, 0 based
 
-		# => prepare working container
+		# prepare working container
 		display_values = []
 		number_of_lines.times { |line| display_values << "" } 
 
-		# => generate the possible elements
+		# generate the possible elements
 		horizontal_slices = [ " #{' ' * @scale} ", # " \s "
 			" #{@horizontal_character * @scale} "] # ie " - "
 		vertical_slices = [ " #{' ' *  @scale} ", # " \s "
