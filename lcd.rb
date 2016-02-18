@@ -2,8 +2,6 @@
 # LCD Class
 # Console Runner
 
-require 'Time'
-
 ## LCD Class
 # converts characters to simplified 5 layer grid, scaleable
 #
@@ -26,7 +24,8 @@ class LCD
 	attr_accessor :scale, :character_encoding, :horizontal_character, :vertical_character
 	attr_reader :values, :output, :logger
 	CHARACTER_ENCODING_DEFAULT = {
-		"0" => [1, 3, 0 ,3 ,1],
+		" " => [0, 0, 0 ,0, 0],
+		"0" => [1, 3, 0 ,3, 1],
 		"1" => [0, 2, 0, 2, 0],
 		"2" => [1, 2 ,1 ,1, 1], 
 		"3" => [1, 2, 1, 2, 1], 

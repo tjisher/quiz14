@@ -8,7 +8,7 @@
 require './lcd.rb'
 require 'minitest/autorun'
 
-class LCDTest < MiniTest::Unit::TestCase
+class LCDTest < MiniTest::Test
 
 	#Basic Assignments 
 	def test_assignment_string
