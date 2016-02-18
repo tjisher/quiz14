@@ -5,7 +5,7 @@
 # Logger
 # Character and encoding changes
 
-require './lcd.rb'
+require_relative 'lcd.rb'
 require 'minitest/autorun'
 
 class LCDTest < MiniTest::Unit::TestCase
