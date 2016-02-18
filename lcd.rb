@@ -1,8 +1,6 @@
 ##ToC
 # LCD Class
 
-require 'Time'
-
 ## LCD Class
 # converts characters to simplified 5 layer grid, scaleable
 #

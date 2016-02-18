@@ -1,3 +1,6 @@
+##ToC
+#LCD API Tests
+
 ENV['RACK_ENV'] = 'test'
 
 require 'minitest/autorun'
@@ -6,7 +9,7 @@ require_relative 'lcd_api.rb'
 
 include Rack::Test::Methods
 
-class LCDAPITest < MiniTest::Unit::TestCase
+class LCDAPITest < MiniTest::Test
 	def app
 	  Sinatra::Application
 	end

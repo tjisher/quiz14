@@ -5,10 +5,10 @@
 # Logger
 # Character and encoding changes
 
-require_relative 'lcd.rb'
 require 'minitest/autorun'
+require_relative 'lcd.rb'
 
-class LCDTest < MiniTest::Unit::TestCase
+class LCDTest < MiniTest::Test
 
 	#Basic Assignments 
 	def test_assignment_string

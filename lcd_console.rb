@@ -8,7 +8,6 @@ require_relative 'lcd.rb'
 # simple implementation order dependent
 # scale aggresively turned into integer, ignored if match default
 unless ARGV.empty?
-
 	#check if scale parameter sent with a possible payload
 	if ARGV[0] == "-s" && ARGV.size == 3
 		scale_possible = ARGV[1].to_i
@@ -21,5 +20,4 @@ unless ARGV.empty?
 	lcd = LCD.new
 	lcd.scale = scale if scale
 	lcd.display ARGV.last
-
 end
